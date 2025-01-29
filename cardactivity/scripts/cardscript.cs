@@ -64,8 +64,8 @@ public partial class cardscript : Sprite2D
                 Scale = Scale.Lerp(new Vector2(-1, Scale.Y), flipSpeed * (float)this.GetProcessDeltaTime()); //scales x to 0.
                                                                                                             //reminder : lerp uses "=" to change scale, NOT += or -=
                                                                                                             //getprocessdeltatime is a good way to get (float)delta when you are unable to get it due to not being in process.
-                                                                                                            //set goal to -1 because setting it to 0 makes it not actually reach 0 due to interpolation wierdness.
-                GD.Print("flipping..." + Scale.X + " " + phasetracker);
+                                                                                                            //set goal to -1 because setting it to 0 makes it not actually reach 0 due to interpolation wierdness. but just imagine its set to 0
+                //GD.Print("flipping..." + Scale.X + " " + phasetracker);
             }
 
             if (Scale.X <= 0 && phasetracker == 0)
@@ -74,12 +74,14 @@ public partial class cardscript : Sprite2D
 
                 phasetracker += 1;
 
-                GD.Print("flipped." + " " + phasetracker);
+                //GD.Print("flipped." + " " + phasetracker);
             }
 
             if (Scale.X < defaultScale.X && phasetracker == 1) //fully flip the card over
             {
-                Scale = Scale.Lerp(new Vector2(defaultScale.X, Scale.Y), flipSpeed * (float)this.GetProcessDeltaTime());
+                Scale = Scale.Lerp(new Vector2(defaultScale.X + 0.00001f, Scale.Y), flipSpeed * (float)this.GetProcessDeltaTime()); //defaultscale plussed 0.0001 for same reasons as the above.
+                                                                                                                                    //the lerping never actually gets to 0, so we add a small bit of value so it actually gets to 0.
+                                                                                                                                    //we set it to be as small as possible so that the card dosent appear a bit stretched. however, making this number bigger will make it so that you can flip it again sooner.
             }
 
             if (Scale.X >= defaultScale.X && phasetracker == 1)
@@ -88,8 +90,8 @@ public partial class cardscript : Sprite2D
                 phasetracker = 0; //resets phasetracker
             }
         }
-        
-        
+
+        GD.Print("fliptime : " + flipTime + "phasetracker : " + phasetracker);
 
     }
 
