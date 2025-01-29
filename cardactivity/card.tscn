@@ -52,3 +52,5 @@ shape = SubResource("RectangleShape2D_leiod")
 debug_color = Color(1, 0, 0.419608, 0.419608)
 
 [connection signal="input_event" from="mainhitbox" to="." method="cardFlip"]
+[connection signal="mouse_entered" from="mainhitbox" to="." method="ifMouseHover"]
+[connection signal="mouse_exited" from="mainhitbox" to="." method="ifMouseExit"]

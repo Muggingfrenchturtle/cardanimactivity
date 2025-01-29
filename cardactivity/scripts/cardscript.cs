@@ -19,6 +19,8 @@ public partial class cardscript : Sprite2D
 
     private int phasetracker = 0; //used for tracking phases in animations
 
+    private float hoverscaleMultiplier = 1.1f; //scale will be multiplied by this number during hovering
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -104,19 +106,26 @@ public partial class cardscript : Sprite2D
 
 	public void ifMouseHover()
 	{
+        
+        Tween tweenerr = GetTree().CreateTween();
 
-	}
+        tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X * hoverscaleMultiplier, defaultScale.Y * hoverscaleMultiplier) , 0.1f);
+        
+    }
 
-	public void ifMouseNotHover()
+	public void ifMouseExit()
 	{
+        Tween tweenerr = GetTree().CreateTween();
 
-	}
+        tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X, defaultScale.Y), 0.1f);
+    }
 
     public void cardFlip(Node viewport, InputEvent inpEvent, int shape_idx)
 	{
         //flipTime = true;
 
-        if (inpEvent is InputEventMouseButton leftClick) //using that inputevent parameter from the area2d signal : https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html
+        if (inpEvent.IsActionPressed("leftClick")) //using that inputevent parameter from the area2d signal : https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html
+                                                   //nvm the normal way works.
         {
             float flipSpeed = 0.5f;
 
@@ -129,7 +138,7 @@ public partial class cardscript : Sprite2D
 
             tweener.TweenCallback(Callable.From(changeflip)); //this only calls changeflip (which changes the sprite texture) after the tweenproperty above is done.
 
-            tweener.TweenProperty(this, "scale:x", defaultScale.X, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping
+            tweener.TweenProperty(this, "scale:x", defaultScale.X * hoverscaleMultiplier, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
         }
         
 
