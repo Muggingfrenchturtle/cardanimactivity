@@ -15,7 +15,7 @@ public partial class cardscript : Sprite2D
 
 	private Vector2 defaultScale;
 
-    private bool flipTime = false;
+    //private bool flipTime = false;
 
     private int phasetracker = 0; //used for tracking phases in animations
 
@@ -51,7 +51,7 @@ public partial class cardscript : Sprite2D
 
 
         
-
+        /*
         if (flipTime == true)
         {
             float flipSpeed = 4f;
@@ -92,8 +92,11 @@ public partial class cardscript : Sprite2D
         }
 
         GD.Print("fliptime : " + flipTime + "phasetracker : " + phasetracker);
+        */
 
     }
+
+    
 
 
     //###################################################################### SIGNAL FUNCTIONS ###########################################################################
@@ -109,11 +112,32 @@ public partial class cardscript : Sprite2D
 
 	}
 
-    public void cardFlip()
+    public void cardFlip(Node viewport, InputEvent inpEvent, int shape_idx)
 	{
-        flipTime = true;
+        //flipTime = true;
+
+        if (inpEvent is InputEventMouseButton leftClick) //using that inputevent parameter from the area2d signal : https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html
+        {
+            float flipSpeed = 0.5f;
+
+            Tween tweener = GetTree().CreateTween(); //tweens : https://docs.godotengine.org/en/stable/classes/class_tween.html
 
 
+
+            tweener.TweenProperty(this, "scale:x", 0, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.In); //"flips" the card halfway by setting scale x to 0 
+                                                                                                                                 //only use 1 axis as the property https://docs.godotengine.org/en/stable/classes/class_tween.html#class-tween-method-tween-property
+
+            tweener.TweenCallback(Callable.From(changeflip)); //this only calls changeflip (which changes the sprite texture) after the tweenproperty above is done.
+
+            tweener.TweenProperty(this, "scale:x", defaultScale.X, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping
+        }
+        
+
+
+    }
+    public void changeflip()
+    {
+        isFacingUp = !isFacingUp;
     }
 
     //###################################################################### SIGNAL FUNCTIONS ###########################################################################
