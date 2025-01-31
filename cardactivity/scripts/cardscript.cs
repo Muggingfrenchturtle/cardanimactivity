@@ -21,8 +21,11 @@ public partial class cardscript : Sprite2D
 
     private bool isFlipping = false; //prevents hover scaling code from firing while the card is flipping
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+    [Signal]
+    public delegate void cardWasClickedEventHandler(); //a signal that will emit once the card is clicked, alerting logicscript to start shaking the screen.
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		defaultScale = new Vector2(Scale.X, Scale.Y);
 
@@ -137,6 +140,11 @@ public partial class cardscript : Sprite2D
 
             Tween tweener = GetTree().CreateTween(); //tweens : https://docs.godotengine.org/en/stable/classes/class_tween.html
 
+
+
+
+            tweener.TweenCallback(Callable.From(ifMouseHover)); //automatically hover scale during flipping. the card should be hoverscaled anyways
+
             tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool that prevents the hover scaling code from running during flipping
 
             tweener.TweenProperty(this, "scale:x", 0, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.In); //"flips" the card halfway by setting scale x to 0 
@@ -147,6 +155,10 @@ public partial class cardscript : Sprite2D
             tweener.TweenProperty(this, "scale:x", defaultScale.X * hoverscaleMultiplier, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
 
             tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool to allow hover scaling to work again.
+
+            tweener.TweenCallback(Callable.From(ifMouseExit)); //automatically hover scale down after flipping. cuz i couldnt be bothered to fix the "the card dosent go down if you move your mouse away while the card is flipping" problem. its like those sinks with the buttons that automatically close the valve when you leave it alone.
+
+            EmitSignal(SignalName.cardWasClicked);//send signal to screenshake
         }
         
 
