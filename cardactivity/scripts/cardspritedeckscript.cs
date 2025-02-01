@@ -13,7 +13,8 @@ public partial class cardspritedeckscript : Node
 									  //each card will get their sprites from here. based on the card's index number
 		{
 			(Texture2D)GD.Load(spriteFolderPath + "test1.png"),
-            (Texture2D)GD.Load(spriteFolderPath + "test1.png")
+            (Texture2D)GD.Load(spriteFolderPath + "test2.png"),
+            (Texture2D)GD.Load(spriteFolderPath + "test3.png")
         };
 	}
 

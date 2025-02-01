@@ -22,6 +22,8 @@ public partial class cardscript : Marker2D
 
     private bool isHovering = false;
 
+    private bool shakeReady = true; //only shake the screen once, cuz its disorienting.
+
     private float postFlipXVal; //used in card flipping. yes. we need this in process. putting it in cardflip() will only run this once, which isnt gonna work.
 
     [Signal]
@@ -117,9 +119,6 @@ public partial class cardscript : Marker2D
 
 
 
-
-
-
             //tweener.TweenCallback(Callable.From(ifMouseHover)); //automatically hover scale during flipping. the card should be hoverscaled anyways
 
             //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool that prevents the hover scaling code from running during flipping
@@ -135,7 +134,11 @@ public partial class cardscript : Marker2D
 
             //tweener.TweenCallback(Callable.From(ifMouseExit)); //automatically hover scale down after flipping. cuz i couldnt be bothered to fix the "the card dosent go down if you move your mouse away while the card is flipping" problem. its like those sinks with the buttons that automatically close the valve when you leave it alone.
 
-            EmitSignal(SignalName.cardWasClicked);//send signal to screenshake
+            if (shakeReady == true)
+            {
+                EmitSignal(SignalName.cardWasClicked);//send signal to screenshake
+                shakeReady = false; //only shake the screen once, cuz its disorienting.
+            }
         }
         
 
@@ -144,6 +147,8 @@ public partial class cardscript : Marker2D
     public void changeflip()
     {
         isFacingUp = !isFacingUp;
+
+        cardNum = (int)(GD.Randi() % 3); //randomizes card face each time you flip.
     }
     /*
     public void isFlippingToggle()
