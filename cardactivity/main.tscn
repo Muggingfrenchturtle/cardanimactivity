@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://co40xm0ft5nmi"]
+[gd_scene load_steps=5 format=3 uid="uid://co40xm0ft5nmi"]
 
 [ext_resource type="Script" path="res://scripts/cardspritedeckscript.cs" id="1_8hrh7"]
 [ext_resource type="PackedScene" uid="uid://ddqolo2rsup6p" path="res://card.tscn" id="1_bd42h"]
-[ext_resource type="Texture2D" uid="uid://dy4knjcc0lm5m" path="res://sprites/template.png" id="1_ljiy3"]
 [ext_resource type="Script" path="res://scripts/logicscript.cs" id="1_siei5"]
 [ext_resource type="Texture2D" uid="uid://bh4pv7fd2oj8y" path="res://sprites/623055-275680216.jpg" id="2_6ccvv"]
 
@@ -10,7 +9,8 @@
 script = ExtResource("1_siei5")
 
 [node name="background" type="Sprite2D" parent="."]
-self_modulate = Color(0.0588235, 0.0588235, 0.0588235, 1)
+visible = false
+modulate = Color(0.117647, 0.117647, 0.117647, 1)
 position = Vector2(662, 360)
 texture = ExtResource("2_6ccvv")
 
@@ -20,4 +20,3 @@ script = ExtResource("1_8hrh7")
 
 [node name="card" parent="." instance=ExtResource("1_bd42h")]
 position = Vector2(349, 335)
-texture = ExtResource("1_ljiy3")

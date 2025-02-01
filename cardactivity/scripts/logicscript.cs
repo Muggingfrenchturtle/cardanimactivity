@@ -37,11 +37,13 @@ public partial class logicscript : Node2D
         var shaketime = 0.1;
         var intensity = 15;
         tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
-        tweener.TweenProperty(this, "position:y", GD.Randi() % intensity, shaketime);
         tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
-        tweener.TweenProperty(this, "position:y", GD.Randi() % intensity, shaketime);
+        tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
+        tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
         tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
         tweener.TweenProperty(this, "position",Vector2.Zero, shaketime);
+
+        
 
     }
 

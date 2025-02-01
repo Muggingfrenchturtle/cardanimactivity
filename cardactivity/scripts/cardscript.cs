@@ -13,7 +13,8 @@ public partial class cardscript : Marker2D
     
 	private bool isFacingUp = false;
 
-	private Vector2 defaultScale;
+	private Vector2 defaultSpriteScale;
+    private Vector2 defaultScale;
 
     private float hoverscaleMultiplier = 1.1f; //scale will be multiplied by this number during hovering
 
@@ -29,7 +30,8 @@ public partial class cardscript : Marker2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-		defaultScale = new Vector2(GetNode<Sprite2D>("Sprite2D").Scale.X, GetNode<Sprite2D>("Sprite2D").Scale.Y);
+		defaultSpriteScale = new Vector2(GetNode<Sprite2D>("Sprite2D").Scale.X, GetNode<Sprite2D>("Sprite2D").Scale.Y);
+        defaultScale = Scale;
 
 		cardspritedeckscript = GetNode<cardspritedeckscript>(@"/root/logicnode/cardspriteDeck");
 
@@ -84,7 +86,7 @@ public partial class cardscript : Marker2D
         
         Tween tweenerr = GetTree().CreateTween();
 
-        tweenerr.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale", new Vector2(defaultScale.X * hoverscaleMultiplier, defaultScale.Y * hoverscaleMultiplier), 0.1f);
+        tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X * hoverscaleMultiplier, defaultScale.Y * hoverscaleMultiplier), 0.1f);
 
         
     }
@@ -95,7 +97,7 @@ public partial class cardscript : Marker2D
 
         Tween tweenerr = GetTree().CreateTween();
 
-        tweenerr.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale", new Vector2(defaultScale.X, defaultScale.Y), 0.1f);
+        tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X, defaultScale.Y), 0.1f);
         
     }
 
@@ -127,7 +129,7 @@ public partial class cardscript : Marker2D
 
             tweener.TweenCallback(Callable.From(changeflip)); //this only calls changeflip (which changes the sprite texture) after the tweenproperty above is done.
 
-            tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", defaultScale.X * hoverscaleMultiplier, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
+            tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", defaultSpriteScale.X, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
 
             //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool to allow hover scaling to work again.
 
