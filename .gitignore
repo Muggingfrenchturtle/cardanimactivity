@@ -89,3 +89,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+/cardactunity/card2/Temp
+cardactunity/card2/Library/PackageCache/com.unity.2d.animation@7.0.10/Editor/Assets/SkinningModule/Icons/Light/Generate_Geometry@2x.png.meta
+*.meta
+*.log
+/cardactunity/card2/Library/PackageCache
+/cardactunity/card2/Library/ShaderCache
