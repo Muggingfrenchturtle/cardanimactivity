@@ -1,16 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://ddqolo2rsup6p"]
+[gd_scene load_steps=4 format=3 uid="uid://ddqolo2rsup6p"]
 
 [ext_resource type="Texture2D" uid="uid://dy4knjcc0lm5m" path="res://sprites/template.png" id="2_82oug"]
 [ext_resource type="Script" path="res://scripts/cardscript.cs" id="2_pe74h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g3cx8"]
 size = Vector2(259.231, 351.539)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qndug"]
-size = Vector2(258.846, 91.5385)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_leiod"]
-size = Vector2(78.4616, 167.692)
 
 [node name="card" type="Marker2D" groups=["card"]]
 scale = Vector2(0.65, 0.65)
@@ -24,34 +18,6 @@ texture = ExtResource("2_82oug")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="mainhitbox"]
 position = Vector2(-0.384583, -0.384613)
 shape = SubResource("RectangleShape2D_g3cx8")
-
-[node name="northHitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="northHitbox"]
-position = Vector2(-0.192322, -130.769)
-shape = SubResource("RectangleShape2D_qndug")
-debug_color = Color(1, 0, 0.419608, 0.419608)
-
-[node name="southHitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="southHitbox"]
-position = Vector2(0, 129.231)
-shape = SubResource("RectangleShape2D_qndug")
-debug_color = Color(1, 0, 0.419608, 0.419608)
-
-[node name="westHitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="westHitbox"]
-position = Vector2(-90, -0.769226)
-shape = SubResource("RectangleShape2D_leiod")
-debug_color = Color(1, 0, 0.419608, 0.419608)
-
-[node name="eastHitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="eastHitbox"]
-position = Vector2(89.2308, 0)
-shape = SubResource("RectangleShape2D_leiod")
-debug_color = Color(1, 0, 0.419608, 0.419608)
 
 [connection signal="input_event" from="mainhitbox" to="." method="cardFlip"]
 [connection signal="mouse_entered" from="mainhitbox" to="." method="ifMouseHover"]

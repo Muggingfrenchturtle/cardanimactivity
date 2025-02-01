@@ -23,17 +23,10 @@ public partial class logicscript : Node2D
 
 	public void screenshake()
 	{
-		GD.Print("shaking");
+		//GD.Print("shaking");
         Tween tweener = GetTree().CreateTween();
 
-        /*
-        tweener.TweenCallback(Callable.From(shakerand));
-        tweener.TweenCallback(Callable.From(shakerand));
-        tweener.TweenCallback(Callable.From(shakerand));
-        tweener.TweenCallback(Callable.From(shakerand));
-        tweener.TweenCallback(Callable.From(shakerand));
-        tweener.TweenCallback(Callable.From(shakeReset));
-        */
+       
         var shaketime = 0.1;
         var intensity = 15;
         tweener.TweenProperty(this, "position", new Vector2(GD.Randi() % intensity, GD.Randi() % intensity) , shaketime);
@@ -48,14 +41,6 @@ public partial class logicscript : Node2D
 
     }
 
-	public void shakerand()
-	{
-        GD.Print("shakerand");
-        GlobalPosition += new Vector2(GD.Randi() % 20, GD.Randi() % 20);
-    }
-	public void shakeReset() //back to normal
-	{
-		GlobalPosition = new Vector2(0, 0);
+	
 
-    }
 }

@@ -58,26 +58,11 @@ public partial class cardscript : Marker2D
         }
 
 
-        
-        /*
-        if (isHovering == true) ////used in card flipping. yes. we need this in process. putting it in cardflip() will only run this once, which isnt gonna work.
-                                //prevents inconsistent x value when removing the mouse from the card while flipping
-        {
-            postFlipXVal = hoverscaleMultiplier; //if hovering, card X value goal will be based on its hover size
-        }
-        else
-        {
-            postFlipXVal = 0; //if the mouse is off, it will be based on its non-hover size
-        }
-        */
-
-
 
 
     }
 
     
-
 
     //###################################################################### SIGNAL FUNCTIONS ###########################################################################
     //https://forum.godotengine.org/t/how-would-i-tell-whether-a-mouse-click-input-is-inside-an-area-2d/9852/2
@@ -118,11 +103,6 @@ public partial class cardscript : Marker2D
             
 
 
-
-            //tweener.TweenCallback(Callable.From(ifMouseHover)); //automatically hover scale during flipping. the card should be hoverscaled anyways
-
-            //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool that prevents the hover scaling code from running during flipping
-
             tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", 0, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.In); //"flips" the card halfway by setting scale x to 0 
                                                                                                                                  //only use 1 axis as the property https://docs.godotengine.org/en/stable/classes/class_tween.html#class-tween-method-tween-property
 
@@ -130,10 +110,7 @@ public partial class cardscript : Marker2D
 
             tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", defaultSpriteScale.X, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
 
-            //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool to allow hover scaling to work again.
-
-            //tweener.TweenCallback(Callable.From(ifMouseExit)); //automatically hover scale down after flipping. cuz i couldnt be bothered to fix the "the card dosent go down if you move your mouse away while the card is flipping" problem. its like those sinks with the buttons that automatically close the valve when you leave it alone.
-
+           
             if (shakeReady == true)
             {
                 EmitSignal(SignalName.cardWasClicked);//send signal to screenshake
@@ -150,12 +127,7 @@ public partial class cardscript : Marker2D
 
         cardNum = (int)(GD.Randi() % 3); //randomizes card face each time you flip.
     }
-    /*
-    public void isFlippingToggle()
-    {
-        isFlipping = !isFlipping;
-    }
-    */
+   
 
     //###################################################################### SIGNAL FUNCTIONS ###########################################################################
 }
