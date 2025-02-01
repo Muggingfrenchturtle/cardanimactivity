@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class cardscript : Sprite2D
+public partial class cardscript : Marker2D
 {
 	[Export]
 	private Texture2D[] cardTexture = new Texture2D[2]; //index 0 is the back, index 1 is the front 
@@ -15,11 +15,13 @@ public partial class cardscript : Sprite2D
 
 	private Vector2 defaultScale;
 
-    private int phasetracker = 0; //used for tracking phases in animations
-
     private float hoverscaleMultiplier = 1.1f; //scale will be multiplied by this number during hovering
 
-    private bool isFlipping = false; //prevents hover scaling code from firing while the card is flipping
+    //private bool isFlipping = false; //prevents hover scaling code from firing while the card is flipping
+
+    private bool isHovering = false;
+
+    private float postFlipXVal; //used in card flipping. yes. we need this in process. putting it in cardflip() will only run this once, which isnt gonna work.
 
     [Signal]
     public delegate void cardWasClickedEventHandler(); //a signal that will emit once the card is clicked, alerting logicscript to start shaking the screen.
@@ -27,14 +29,14 @@ public partial class cardscript : Sprite2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-		defaultScale = new Vector2(Scale.X, Scale.Y);
+		defaultScale = new Vector2(GetNode<Sprite2D>("Sprite2D").Scale.X, GetNode<Sprite2D>("Sprite2D").Scale.Y);
 
 		cardspritedeckscript = GetNode<cardspritedeckscript>(@"/root/logicnode/cardspriteDeck");
 
 
         cardTexture[0] = (Texture2D)GD.Load("res://sprites/cardback.png");
 
-		this.Texture = cardTexture[0]; //shows cardback on existence
+        GetNode<Sprite2D>("Sprite2D").Texture = cardTexture[0]; //shows cardback on existence
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -44,60 +46,29 @@ public partial class cardscript : Sprite2D
 		{
             cardTexture[1] = cardspritedeckscript.cardsprites[cardNum]; //the card's sprite will change depending on the card's ID number. 
 
-			this.Texture = cardTexture[1];
+			GetNode<Sprite2D>("Sprite2D").Texture = cardTexture[1];
         }
 		else 
 		{
-            this.Texture = cardTexture[0];
+            GetNode<Sprite2D>("Sprite2D").Texture = cardTexture[0];
         }
-
-
-
 
 
         
         /*
-        if (flipTime == true)
+        if (isHovering == true) ////used in card flipping. yes. we need this in process. putting it in cardflip() will only run this once, which isnt gonna work.
+                                //prevents inconsistent x value when removing the mouse from the card while flipping
         {
-            float flipSpeed = 4f;
-
-            //reduce x scale, when it reaches 0, switch texture and increase x once again
-
-            if (Scale.X > 0 && phasetracker == 0) //"flip" the card halfway
-            {
-                
-                Scale = Scale.Lerp(new Vector2(-1, Scale.Y), flipSpeed * (float)this.GetProcessDeltaTime()); //scales x to 0.
-                                                                                                            //reminder : lerp uses "=" to change scale, NOT += or -=
-                                                                                                            //getprocessdeltatime is a good way to get (float)delta when you are unable to get it due to not being in process.
-                                                                                                            //set goal to -1 because setting it to 0 makes it not actually reach 0 due to interpolation wierdness. but just imagine its set to 0
-                //GD.Print("flipping..." + Scale.X + " " + phasetracker);
-            }
-
-            if (Scale.X <= 0 && phasetracker == 0)
-            {
-                isFacingUp = !isFacingUp; //toggles isfacingup once scalex = 0
-
-                phasetracker += 1;
-
-                //GD.Print("flipped." + " " + phasetracker);
-            }
-
-            if (Scale.X < defaultScale.X && phasetracker == 1) //fully flip the card over
-            {
-                Scale = Scale.Lerp(new Vector2(defaultScale.X + 0.00001f, Scale.Y), flipSpeed * (float)this.GetProcessDeltaTime()); //defaultscale plussed 0.0001 for same reasons as the above.
-                                                                                                                                    //the lerping never actually gets to 0, so we add a small bit of value so it actually gets to 0.
-                                                                                                                                    //we set it to be as small as possible so that the card dosent appear a bit stretched. however, making this number bigger will make it so that you can flip it again sooner.
-            }
-
-            if (Scale.X >= defaultScale.X && phasetracker == 1)
-            {
-                flipTime = false; //end the animation once its done flipping
-                phasetracker = 0; //resets phasetracker
-            }
+            postFlipXVal = hoverscaleMultiplier; //if hovering, card X value goal will be based on its hover size
         }
-
-        GD.Print("fliptime : " + flipTime + "phasetracker : " + phasetracker);
+        else
+        {
+            postFlipXVal = 0; //if the mouse is off, it will be based on its non-hover size
+        }
         */
+
+
+
 
     }
 
@@ -109,24 +80,23 @@ public partial class cardscript : Sprite2D
 
 	public void ifMouseHover()
 	{
-        if (isFlipping == false)
-        {
-            Tween tweenerr = GetTree().CreateTween();
+        isHovering = true;
+        
+        Tween tweenerr = GetTree().CreateTween();
 
-            tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X * hoverscaleMultiplier, defaultScale.Y * hoverscaleMultiplier), 0.1f);
+        tweenerr.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale", new Vector2(defaultScale.X * hoverscaleMultiplier, defaultScale.Y * hoverscaleMultiplier), 0.1f);
 
-        }
-
+        
     }
 
 	public void ifMouseExit()
 	{
-        if (isFlipping == false)
-        {
-            Tween tweenerr = GetTree().CreateTween();
+        isHovering = false;
 
-            tweenerr.TweenProperty(this, "scale", new Vector2(defaultScale.X, defaultScale.Y), 0.1f);
-        }
+        Tween tweenerr = GetTree().CreateTween();
+
+        tweenerr.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale", new Vector2(defaultScale.X, defaultScale.Y), 0.1f);
+        
     }
 
     public void cardFlip(Node viewport, InputEvent inpEvent, int shape_idx)
@@ -136,27 +106,32 @@ public partial class cardscript : Sprite2D
         if (inpEvent.IsActionPressed("leftClick")) //using that inputevent parameter from the area2d signal : https://docs.godotengine.org/en/stable/tutorials/inputs/input_examples.html
                                                    //nvm the normal way works.
         {
-            float flipSpeed = 0.5f;
 
             Tween tweener = GetTree().CreateTween(); //tweens : https://docs.godotengine.org/en/stable/classes/class_tween.html
 
+            float flipSpeed = 0.5f;
+
+            
 
 
 
-            tweener.TweenCallback(Callable.From(ifMouseHover)); //automatically hover scale during flipping. the card should be hoverscaled anyways
 
-            tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool that prevents the hover scaling code from running during flipping
 
-            tweener.TweenProperty(this, "scale:x", 0, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.In); //"flips" the card halfway by setting scale x to 0 
+
+            //tweener.TweenCallback(Callable.From(ifMouseHover)); //automatically hover scale during flipping. the card should be hoverscaled anyways
+
+            //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool that prevents the hover scaling code from running during flipping
+
+            tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", 0, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.In); //"flips" the card halfway by setting scale x to 0 
                                                                                                                                  //only use 1 axis as the property https://docs.godotengine.org/en/stable/classes/class_tween.html#class-tween-method-tween-property
 
             tweener.TweenCallback(Callable.From(changeflip)); //this only calls changeflip (which changes the sprite texture) after the tweenproperty above is done.
 
-            tweener.TweenProperty(this, "scale:x", defaultScale.X * hoverscaleMultiplier, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
+            tweener.TweenProperty(GetNode<Sprite2D>("Sprite2D"), "scale:x", defaultScale.X * hoverscaleMultiplier, flipSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out); //finishes flipping. hoverscalemultiplier is used because the mouse will be on the card when it clicks.
 
-            tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool to allow hover scaling to work again.
+            //tweener.TweenCallback(Callable.From(isFlippingToggle)); //toggles bool to allow hover scaling to work again.
 
-            tweener.TweenCallback(Callable.From(ifMouseExit)); //automatically hover scale down after flipping. cuz i couldnt be bothered to fix the "the card dosent go down if you move your mouse away while the card is flipping" problem. its like those sinks with the buttons that automatically close the valve when you leave it alone.
+            //tweener.TweenCallback(Callable.From(ifMouseExit)); //automatically hover scale down after flipping. cuz i couldnt be bothered to fix the "the card dosent go down if you move your mouse away while the card is flipping" problem. its like those sinks with the buttons that automatically close the valve when you leave it alone.
 
             EmitSignal(SignalName.cardWasClicked);//send signal to screenshake
         }
@@ -168,10 +143,12 @@ public partial class cardscript : Sprite2D
     {
         isFacingUp = !isFacingUp;
     }
+    /*
     public void isFlippingToggle()
     {
         isFlipping = !isFlipping;
     }
+    */
 
     //###################################################################### SIGNAL FUNCTIONS ###########################################################################
 }

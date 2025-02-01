@@ -17,7 +17,7 @@ public partial class logicscript : Node2D
 
         foreach (cardscript card in GetTree().GetNodesInGroup("card"))
         {
-            card.cardWasClicked += screenshake; //connects each card's signal to the screeshake function.
+            //card.cardWasClicked += screenshake; //connects each card's signal to the screeshake function.
         }
     }
 
@@ -34,7 +34,7 @@ public partial class logicscript : Node2D
         tweener.TweenCallback(Callable.From(shakerand));
         tweener.TweenCallback(Callable.From(shakeReset));
         */
-        var shaketime = 0.3;
+        var shaketime = 0.1;
         var intensity = 15;
         tweener.TweenProperty(this, "position:x", GD.Randi() % intensity, shaketime);
         tweener.TweenProperty(this, "position:y", GD.Randi() % intensity, shaketime);

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ddqolo2rsup6p"]
 
-[ext_resource type="Texture2D" uid="uid://basptijxt2ltn" path="res://sprites/test1.png" id="1_s7al0"]
+[ext_resource type="Texture2D" uid="uid://dy4knjcc0lm5m" path="res://sprites/template.png" id="2_82oug"]
 [ext_resource type="Script" path="res://scripts/cardscript.cs" id="2_pe74h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g3cx8"]
@@ -12,10 +12,12 @@ size = Vector2(258.846, 91.5385)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_leiod"]
 size = Vector2(78.4616, 167.692)
 
-[node name="card" type="Sprite2D" groups=["card"]]
+[node name="card" type="Marker2D" groups=["card"]]
 scale = Vector2(0.65, 0.65)
-texture = ExtResource("1_s7al0")
 script = ExtResource("2_pe74h")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_82oug")
 
 [node name="mainhitbox" type="Area2D" parent="."]
 
